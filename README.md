@@ -7,7 +7,7 @@ rl_sar will automatically download this repository when needed.
 Support List:
 
 |Robot Name (rname:=)|Gazebo|Mujoco|
-|-|-|-|-|
+|-|-|-|
 |Unitree-A1 (a1)|✅|❌|
 |Unitree-Go2 (go2)|✅|✅|
 |Unitree-Go2W (go2w)|✅|✅|
