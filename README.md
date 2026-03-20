@@ -19,3 +19,4 @@ Support List:
 |zhinao-L4W4 (l4w4)|✅|❌|
 |Deeprobotics-Lite3 (lite3)|✅|❌|
 |DDTRobot-Tita (tita)|✅|❌|
+|AgiBot D1 (d1)|✅|✅|
