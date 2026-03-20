@@ -1,0 +1,253 @@
+<mujoco model="d1">
+  <compiler angle="radian" meshdir="assets" autolimits="true" />
+
+  <option cone="elliptic" impratio="100" />
+
+  <default>
+    <default class="d1">
+      <geom friction="0.4" margin="0.001" condim="3" contype="1" conaffinity="0"/>
+      <joint axis="0 1 0" damping="0.1" armature="0.01" frictionloss="0.2"/>
+      <motor ctrlrange="-33.5 33.5"/>
+      <default class="abad">
+        <joint axis="1 0 0" range="-0.4887 0.4887"/>
+      </default>
+      <default class="hip">
+        <joint range="-1.1519 2.967"/>
+      </default>
+      <default class="knee">
+        <joint range="-2.723 -0.602"/>
+        <motor ctrlrange="-45.43 45.43"/>
+      </default>
+      <default class="visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+      </default>
+      <default class="collision">
+        <geom group="3" contype="1" conaffinity="0"/>
+        <default class="foot">
+          <geom size="0.022" pos="0 0 -0.21366" priority="1" condim="6"
+            friction="0.4 0.02 0.01" contype="1" conaffinity="1"/>
+        </default>
+      </default>
+    </default>
+  </default>
+
+  <asset>
+    <material name="metal" rgba=".9 .95 .95 1" />
+    <material name="black" rgba="0 0 0 1" />
+    <material name="white" rgba="1 1 1 1" />
+    <material name="gray" rgba="0.75294 0.75294 0.75294 1" />
+
+    <mesh file="BASE_LINK.STL" />
+    <mesh file="FL_ABAD_LINK.STL" />
+    <mesh file="FL_HIP_LINK.STL" />
+    <mesh file="FL_KNEE_LINK.STL" />
+    <mesh file="FL_FOOT_LINK.STL" />
+    <mesh file="FR_ABAD_LINK.STL" />
+    <mesh file="FR_HIP_LINK.STL" />
+    <mesh file="FR_KNEE_LINK.STL" />
+    <mesh file="FR_FOOT_LINK.STL" />
+    <mesh file="RL_ABAD_LINK.STL" />
+    <mesh file="RL_HIP_LINK.STL" />
+    <mesh file="RL_KNEE_LINK.STL" />
+    <mesh file="RL_FOOT_LINK.STL" />
+    <mesh file="RR_ABAD_LINK.STL" />
+    <mesh file="RR_HIP_LINK.STL" />
+    <mesh file="RR_KNEE_LINK.STL" />
+    <mesh file="RR_FOOT_LINK.STL" />
+  </asset>
+
+  <worldbody>
+    <body name="base_link" pos="0 0 0.5" childclass="d1">
+      <inertial pos="0.0054 0 0.0061" mass="6.268"
+        diaginertia="0.0274 0.085 0.0992" />
+      <freejoint />
+      <geom mesh="BASE_LINK" material="gray" class="visual" />
+      <geom size="0.2 0.08 0.05" type="box" class="collision" />
+      <site name="imu" pos="0 0 0" />
+
+      <!-- Front Left Leg -->
+      <body name="FL_ABAD" pos="0.17449 0.062 0">
+        <inertial pos="-0.027 -0.0155 0" mass="0.454"
+          diaginertia="0.000251 0.000487 0.000541" />
+        <joint name="FL_ABAD_JOINT" class="abad" />
+        <geom mesh="FL_ABAD_LINK" material="gray" class="visual" />
+        <geom size="0.04 0.03" pos="-0.02 -0.04 0" type="cylinder" quat="1 1 0 0" class="collision" />
+
+        <body name="FL_HIP" pos="0 0.097412 0">
+          <inertial pos="-0.003 -0.043 -0.022" mass="1.502"
+            diaginertia="0.00695 0.00476 0.00326" />
+          <joint name="FL_HIP_JOINT" class="hip" />
+          <geom mesh="FL_HIP_LINK" material="gray" class="visual" />
+          <geom size="0.1 0.015 0.02" pos="0 0 -0.1" type="box" quat="0.707 0 0.707 0" class="collision" />
+
+          <body name="FL_KNEE" pos="0 0 -0.2">
+            <inertial pos="0.0077 0 -0.092" mass="0.207"
+              diaginertia="0.00159 0.00162 0.00005" />
+            <joint name="FL_KNEE_JOINT" class="knee" />
+            <geom mesh="FL_KNEE_LINK" material="gray" class="visual" />
+            <geom size="0.012 0.06" pos="0.008 0 -0.06" type="cylinder" class="collision" />
+            <geom size="0.011 0.04" pos="0.01 0 -0.14" type="cylinder" class="collision" />
+            <geom mesh="FL_FOOT_LINK" material="gray" class="visual" pos="0 0 -0.21366" />
+            <geom name="FL" class="foot" />
+            <body name="FL_FOOT" pos="0 0 -0.21366" />
+          </body>
+        </body>
+      </body>
+
+      <!-- Front Right Leg -->
+      <body name="FR_ABAD" pos="0.17449 -0.062 0">
+        <inertial pos="-0.027 0.0155 0" mass="0.454"
+          diaginertia="0.000251 0.000487 0.000541" />
+        <joint name="FR_ABAD_JOINT" class="abad" />
+        <geom mesh="FR_ABAD_LINK" material="gray" class="visual" />
+        <geom size="0.04 0.03" pos="-0.02 0.04 0" type="cylinder" quat="1 1 0 0" class="collision" />
+
+        <body name="FR_HIP" pos="0 -0.097399 0">
+          <inertial pos="-0.003 0.043 -0.022" mass="1.508"
+            diaginertia="0.00715 0.00496 0.00327" />
+          <joint name="FR_HIP_JOINT" class="hip" />
+          <geom mesh="FR_HIP_LINK" material="gray" class="visual" />
+          <geom size="0.1 0.015 0.02" pos="0 0 -0.1" type="box" quat="0.707 0 0.707 0" class="collision" />
+
+          <body name="FR_KNEE" pos="0 0 -0.2">
+            <inertial pos="0.0077 0 -0.092" mass="0.207"
+              diaginertia="0.00159 0.00162 0.00005" />
+            <joint name="FR_KNEE_JOINT" class="knee" />
+            <geom mesh="FR_KNEE_LINK" material="gray" class="visual" />
+            <geom size="0.012 0.06" pos="0.008 0 -0.06" type="cylinder" class="collision" />
+            <geom size="0.011 0.04" pos="0.01 0 -0.14" type="cylinder" class="collision" />
+            <geom mesh="FR_FOOT_LINK" material="gray" class="visual" pos="0 0 -0.21366" />
+            <geom name="FR" class="foot" />
+            <body name="FR_FOOT" pos="0 0 -0.21366" />
+          </body>
+        </body>
+      </body>
+
+      <!-- Rear Left Leg -->
+      <body name="RL_ABAD" pos="-0.17449 0.062 0">
+        <inertial pos="0.027 -0.0155 0" mass="0.454"
+          diaginertia="0.000251 0.000487 0.000541" />
+        <joint name="RL_ABAD_JOINT" class="abad" />
+        <geom mesh="RL_ABAD_LINK" material="gray" class="visual" />
+        <geom size="0.04 0.03" pos="0.02 -0.04 0" type="cylinder" quat="1 1 0 0" class="collision" />
+
+        <body name="RL_HIP" pos="0 0.097412 0">
+          <inertial pos="-0.003 -0.043 -0.022" mass="1.502"
+            diaginertia="0.00695 0.00476 0.00326" />
+          <joint name="RL_HIP_JOINT" class="hip" />
+          <geom mesh="RL_HIP_LINK" material="gray" class="visual" />
+          <geom size="0.1 0.015 0.02" pos="0 0 -0.1" type="box" quat="0.707 0 0.707 0" class="collision" />
+
+          <body name="RL_KNEE" pos="0 0 -0.2">
+            <inertial pos="0.0077 0 -0.092" mass="0.207"
+              diaginertia="0.00159 0.00162 0.00005" />
+            <joint name="RL_KNEE_JOINT" class="knee" />
+            <geom mesh="RL_KNEE_LINK" material="gray" class="visual" />
+            <geom size="0.012 0.06" pos="0.008 0 -0.06" type="cylinder" class="collision" />
+            <geom size="0.011 0.04" pos="0.01 0 -0.14" type="cylinder" class="collision" />
+            <geom mesh="RL_FOOT_LINK" material="gray" class="visual" pos="0 0 -0.21366" />
+            <geom name="RL" class="foot" />
+            <body name="RL_FOOT" pos="0 0 -0.21366" />
+          </body>
+        </body>
+      </body>
+
+      <!-- Rear Right Leg -->
+      <body name="RR_ABAD" pos="-0.17449 -0.062 0">
+        <inertial pos="0.027 0.0155 0" mass="0.454"
+          diaginertia="0.000251 0.000487 0.000541" />
+        <joint name="RR_ABAD_JOINT" class="abad" />
+        <geom mesh="RR_ABAD_LINK" material="gray" class="visual" />
+        <geom size="0.04 0.03" pos="0.02 0.04 0" type="cylinder" quat="1 1 0 0" class="collision" />
+
+        <body name="RR_HIP" pos="0 -0.0974 0">
+          <inertial pos="-0.003 0.043 -0.022" mass="1.508"
+            diaginertia="0.00715 0.00496 0.00327" />
+          <joint name="RR_HIP_JOINT" class="hip" />
+          <geom mesh="RR_HIP_LINK" material="gray" class="visual" />
+          <geom size="0.1 0.015 0.02" pos="0 0 -0.1" type="box" quat="0.707 0 0.707 0" class="collision" />
+
+          <body name="RR_KNEE" pos="0 0 -0.2">
+            <inertial pos="0.0077 0 -0.092" mass="0.207"
+              diaginertia="0.00159 0.00162 0.00005" />
+            <joint name="RR_KNEE_JOINT" class="knee" />
+            <geom mesh="RR_KNEE_LINK" material="gray" class="visual" />
+            <geom size="0.012 0.06" pos="0.008 0 -0.06" type="cylinder" class="collision" />
+            <geom size="0.011 0.04" pos="0.01 0 -0.14" type="cylinder" class="collision" />
+            <geom mesh="RR_FOOT_LINK" material="gray" class="visual" pos="0 0 -0.21366" />
+            <geom name="RR" class="foot" />
+            <body name="RR_FOOT" pos="0 0 -0.21366" />
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor class="abad" name="FR_abad" joint="FR_ABAD_JOINT" />
+    <motor class="hip" name="FR_hip" joint="FR_HIP_JOINT" />
+    <motor class="knee" name="FR_knee" joint="FR_KNEE_JOINT" />
+    <motor class="abad" name="FL_abad" joint="FL_ABAD_JOINT" />
+    <motor class="hip" name="FL_hip" joint="FL_HIP_JOINT" />
+    <motor class="knee" name="FL_knee" joint="FL_KNEE_JOINT" />
+    <motor class="abad" name="RR_abad" joint="RR_ABAD_JOINT" />
+    <motor class="hip" name="RR_hip" joint="RR_HIP_JOINT" />
+    <motor class="knee" name="RR_knee" joint="RR_KNEE_JOINT" />
+    <motor class="abad" name="RL_abad" joint="RL_ABAD_JOINT" />
+    <motor class="hip" name="RL_hip" joint="RL_HIP_JOINT" />
+    <motor class="knee" name="RL_knee" joint="RL_KNEE_JOINT" />
+  </actuator>
+
+  <sensor>
+    <jointpos name="FR_abad_pos" joint="FR_ABAD_JOINT" />
+    <jointpos name="FR_hip_pos" joint="FR_HIP_JOINT" />
+    <jointpos name="FR_knee_pos" joint="FR_KNEE_JOINT" />
+    <jointpos name="FL_abad_pos" joint="FL_ABAD_JOINT" />
+    <jointpos name="FL_hip_pos" joint="FL_HIP_JOINT" />
+    <jointpos name="FL_knee_pos" joint="FL_KNEE_JOINT" />
+    <jointpos name="RR_abad_pos" joint="RR_ABAD_JOINT" />
+    <jointpos name="RR_hip_pos" joint="RR_HIP_JOINT" />
+    <jointpos name="RR_knee_pos" joint="RR_KNEE_JOINT" />
+    <jointpos name="RL_abad_pos" joint="RL_ABAD_JOINT" />
+    <jointpos name="RL_hip_pos" joint="RL_HIP_JOINT" />
+    <jointpos name="RL_knee_pos" joint="RL_KNEE_JOINT" />
+
+    <jointvel name="FR_abad_vel" joint="FR_ABAD_JOINT" />
+    <jointvel name="FR_hip_vel" joint="FR_HIP_JOINT" />
+    <jointvel name="FR_knee_vel" joint="FR_KNEE_JOINT" />
+    <jointvel name="FL_abad_vel" joint="FL_ABAD_JOINT" />
+    <jointvel name="FL_hip_vel" joint="FL_HIP_JOINT" />
+    <jointvel name="FL_knee_vel" joint="FL_KNEE_JOINT" />
+    <jointvel name="RR_abad_vel" joint="RR_ABAD_JOINT" />
+    <jointvel name="RR_hip_vel" joint="RR_HIP_JOINT" />
+    <jointvel name="RR_knee_vel" joint="RR_KNEE_JOINT" />
+    <jointvel name="RL_abad_vel" joint="RL_ABAD_JOINT" />
+    <jointvel name="RL_hip_vel" joint="RL_HIP_JOINT" />
+    <jointvel name="RL_knee_vel" joint="RL_KNEE_JOINT" />
+
+    <jointactuatorfrc name="FR_abad_torque" joint="FR_ABAD_JOINT" noise="0.01" />
+    <jointactuatorfrc name="FR_hip_torque" joint="FR_HIP_JOINT" noise="0.01" />
+    <jointactuatorfrc name="FR_knee_torque" joint="FR_KNEE_JOINT" noise="0.01" />
+    <jointactuatorfrc name="FL_abad_torque" joint="FL_ABAD_JOINT" noise="0.01" />
+    <jointactuatorfrc name="FL_hip_torque" joint="FL_HIP_JOINT" noise="0.01" />
+    <jointactuatorfrc name="FL_knee_torque" joint="FL_KNEE_JOINT" noise="0.01" />
+    <jointactuatorfrc name="RR_abad_torque" joint="RR_ABAD_JOINT" noise="0.01" />
+    <jointactuatorfrc name="RR_hip_torque" joint="RR_HIP_JOINT" noise="0.01" />
+    <jointactuatorfrc name="RR_knee_torque" joint="RR_KNEE_JOINT" noise="0.01" />
+    <jointactuatorfrc name="RL_abad_torque" joint="RL_ABAD_JOINT" noise="0.01" />
+    <jointactuatorfrc name="RL_hip_torque" joint="RL_HIP_JOINT" noise="0.01" />
+    <jointactuatorfrc name="RL_knee_torque" joint="RL_KNEE_JOINT" noise="0.01" />
+
+    <framequat name="imu_quat" objtype="site" objname="imu" />
+    <gyro name="imu_gyro" site="imu" />
+    <accelerometer name="imu_acc" site="imu" />
+
+    <framepos name="frame_pos" objtype="site" objname="imu" />
+    <framelinvel name="frame_vel" objtype="site" objname="imu" />
+  </sensor>
+
+  <keyframe>
+    <key name="home" qpos="0 0 0.5 1 0 0 0 0 0.8 -1.5 0 0.8 -1.5 0 0.8 -1.5 0 0.8 -1.5"
+      ctrl="0 0.8 -1.5 0 0.8 -1.5 0 0.8 -1.5 0 0.8 -1.5" />
+  </keyframe>
+</mujoco>

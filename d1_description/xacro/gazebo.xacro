@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:property name="abad_torque_max" value="33.5"/>
+    <xacro:property name="hip_torque_max" value="33.5"/>
+    <xacro:property name="knee_torque_max" value="33.5"/>
+
+    <xacro:property name="ros_version" value="$(env ROS_VERSION)" />
+
+    <xacro:if value="${int(ros_version) == 1}">
+
+    <!-- ros_control plugin -->
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/d1_gazebo</robotNamespace>
+            <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+        </plugin>
+    </gazebo>
+
+    <!-- IMU sensor -->
+    <gazebo reference="imu_link">
+        <gravity>true</gravity>
+        <sensor name="imu_sensor" type="imu">
+            <always_on>true</always_on>
+            <update_rate>1000</update_rate>
+            <visualize>true</visualize>
+            <topic>__default_topic__</topic>
+            <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+                <topicName>trunk_imu</topicName>
+                <bodyName>imu_link</bodyName>
+                <updateRateHZ>1000.0</updateRateHZ>
+                <gaussianNoise>0.0</gaussianNoise>
+                <xyzOffset>0 0 0</xyzOffset>
+                <rpyOffset>0 0 0</rpyOffset>
+                <frameName>imu_link</frameName>
+            </plugin>
+            <pose>0 0 0 0 0 0</pose>
+        </sensor>
+    </gazebo>
+
+    </xacro:if>
+
+    <xacro:if value="${int(ros_version) == 2}">
+
+    <gazebo reference="imu_link">
+      <sensor name="imu_sensor" type="imu">
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+          <ros>
+            <namespace>/</namespace>
+            <remapping>~/out:=imu</remapping>
+          </ros>
+          <initial_orientation_as_reference>false</initial_orientation_as_reference>
+        </plugin>
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <visualize>true</visualize>
+        <imu>
+          <angular_velocity>
+            <x><noise type="gaussian"><mean>0.0</mean><stddev>2e-4</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0.0</mean><stddev>2e-4</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0.0</mean><stddev>2e-4</stddev></noise></z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x><noise type="gaussian"><mean>0.0</mean><stddev>1.7e-2</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0.0</mean><stddev>1.7e-2</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0.0</mean><stddev>1.7e-2</stddev></noise></z>
+          </linear_acceleration>
+        </imu>
+      </sensor>
+    </gazebo>
+
+    <ros2_control name="GazeboSystem" type="system">
+        <hardware>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+
+        <xacro:macro name="joint_interface" params="joint_name torque_limit initial_pos">
+            <joint name="${joint_name}">
+            <command_interface name="effort">
+                <param name="min">-${torque_limit}</param>
+                <param name="max">${torque_limit}</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">${initial_pos}</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+            </joint>
+        </xacro:macro>
+
+        <xacro:macro name="leg_joints" params="prefix">
+            <xacro:joint_interface joint_name="${prefix}_ABAD_JOINT" torque_limit="${abad_torque_max}" initial_pos="0.0"/>
+            <xacro:joint_interface joint_name="${prefix}_HIP_JOINT" torque_limit="${hip_torque_max}" initial_pos="0.8"/>
+            <xacro:joint_interface joint_name="${prefix}_KNEE_JOINT" torque_limit="${knee_torque_max}" initial_pos="-1.5"/>
+        </xacro:macro>
+
+        <xacro:leg_joints prefix="FR"/>
+        <xacro:leg_joints prefix="FL"/>
+        <xacro:leg_joints prefix="RR"/>
+        <xacro:leg_joints prefix="RL"/>
+
+    </ros2_control>
+
+    <gazebo>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+            <parameters>$(find d1_description)/config/robot_control_ros2.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+    </xacro:if>
+
+    <!-- Base link properties -->
+    <gazebo reference="BASE_LINK">
+        <turnGravityOff>false</turnGravityOff>
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <kp value="1000000.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+
+    <!-- FL leg -->
+    <gazebo reference="FL_ABAD_LINK">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+    </gazebo>
+    <gazebo reference="FL_HIP_LINK">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+        <kp value="1000000.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+    <gazebo reference="FL_KNEE_LINK">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+    </gazebo>
+    <gazebo reference="FL_FOOT_LINK">
+        <mu1>0.6</mu1>
+        <mu2>0.6</mu2>
+        <self_collide>1</self_collide>
+        <kp value="1000000.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+
+    <!-- FR leg -->
+    <gazebo reference="FR_ABAD_LINK">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+    </gazebo>
+    <gazebo reference="FR_HIP_LINK">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+        <kp value="1000000.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+    <gazebo reference="FR_KNEE_LINK">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+    </gazebo>
+    <gazebo reference="FR_FOOT_LINK">
+        <mu1>0.6</mu1>
+        <mu2>0.6</mu2>
+        <self_collide>1</self_collide>
+        <kp value="1000000.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+
+    <!-- RL leg -->
+    <gazebo reference="RL_ABAD_LINK">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+    </gazebo>
+    <gazebo reference="RL_HIP_LINK">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+        <kp value="1000000.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+    <gazebo reference="RL_KNEE_LINK">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+    </gazebo>
+    <gazebo reference="RL_FOOT_LINK">
+        <mu1>0.6</mu1>
+        <mu2>0.6</mu2>
+        <self_collide>1</self_collide>
+        <kp value="1000000.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+
+    <!-- RR leg -->
+    <gazebo reference="RR_ABAD_LINK">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+    </gazebo>
+    <gazebo reference="RR_HIP_LINK">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+        <kp value="1000000.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+    <gazebo reference="RR_KNEE_LINK">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+    </gazebo>
+    <gazebo reference="RR_FOOT_LINK">
+        <mu1>0.6</mu1>
+        <mu2>0.6</mu2>
+        <self_collide>1</self_collide>
+        <kp value="1000000.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+
+</robot>

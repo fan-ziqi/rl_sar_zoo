@@ -1,0 +1,60 @@
+# Copyright (c) 2024-2025 rl_sar
+# SPDX-License-Identifier: Apache-2.0
+
+d1_gazebo:
+    # Publish all joint states -----------------------------------
+    joint_state_controller:
+        type: joint_state_controller/JointStateController
+        publish_rate: 1000
+
+    # FL Controllers ---------------------------------------
+    FL_ABAD_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: FL_ABAD_JOINT
+
+    FL_HIP_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: FL_HIP_JOINT
+
+    FL_KNEE_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: FL_KNEE_JOINT
+
+    # FR Controllers ---------------------------------------
+    FR_ABAD_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: FR_ABAD_JOINT
+
+    FR_HIP_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: FR_HIP_JOINT
+
+    FR_KNEE_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: FR_KNEE_JOINT
+
+    # RL Controllers ---------------------------------------
+    RL_ABAD_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: RL_ABAD_JOINT
+
+    RL_HIP_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: RL_HIP_JOINT
+
+    RL_KNEE_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: RL_KNEE_JOINT
+
+    # RR Controllers ---------------------------------------
+    RR_ABAD_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: RR_ABAD_JOINT
+
+    RR_HIP_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: RR_HIP_JOINT
+
+    RR_KNEE_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: RR_KNEE_JOINT
